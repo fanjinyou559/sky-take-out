@@ -1,8 +1,10 @@
 package com.sky.mapper;
 
 import com.github.pagehelper.Page;
+import com.sky.annotation.AutoFill;
 import com.sky.dto.CategoryPageQueryDTO;
 import com.sky.entity.Category;
+import com.sky.enumeration.OperationType;
 import lombok.Data;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
@@ -16,6 +18,7 @@ public interface CategoryMapper {
      * @param category
      * @return
      */
+    @AutoFill(OperationType.INSERT)
     @Insert("insert into category (type,name,sort ,status ,create_time,update_time,create_user,update_user ) " +
             "values " +
             "(#{type},#{name},#{sort},#{status},#{createTime}, #{updateTime}, #{createUser}, #{updateUser});")
@@ -32,6 +35,7 @@ public interface CategoryMapper {
      * 启用禁用分类
      * @return
      */
+    @AutoFill(OperationType.UPDATE)
     int update(Category category);
 
     /**
