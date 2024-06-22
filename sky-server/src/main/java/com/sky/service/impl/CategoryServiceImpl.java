@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 分类业务层
@@ -123,5 +124,15 @@ public class CategoryServiceImpl implements CategoryService {
         //删除分类数据
         int rows = categoryMapper.deleteById(id);
         return rows;
+    }
+
+    @Override
+    /**
+     * 根据类型查询分类
+     * @param type
+     * @return
+     */
+    public List<Category> list(Integer type) {
+        return categoryMapper.list(type);
     }
 }
