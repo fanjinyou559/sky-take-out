@@ -107,7 +107,7 @@ public class DishController {
      * @param categoryId
      * @return
      */
-    @PostMapping("list")
+    @GetMapping("list")
     @ApiOperation("根据类型id查询菜品")
     public Result<List<Dish>> list(Long categoryId){
         log.info("根据类型id查询菜品: {}",categoryId);

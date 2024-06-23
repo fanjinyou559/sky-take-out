@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace等于mapper接口类的全限定名,这样实现对应 -->
+<mapper namespace="com.sky.mapper.SetmealMapper">
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO setmeal(CATEGORY_ID, NAME, PRICE, DESCRIPTION, IMAGE, CREATE_TIME, UPDATE_TIME, CREATE_USER, UPDATE_USER)
+        VALUES
+        (#{categoryId},#{name},#{price} ,#{description},#{image},#{createTime},#{updateTime},#{createUser},#{updateUser})
+    </insert>
+
+    <select id="pageQuery" resultType="com.sky.vo.SetmealVO">
+        SELECT s.*,c.name AS categoryName  FROM setmeal s  LEFT OUTER JOIN category c ON s.category_id = c.id
+        <where>
+            <if test="name!=null"> and s.name like concat("%",#{name},"%")</if>
+            <if test="categoryId!=null"> and s.category_id = #{categoryId}</if>
+            <if test="status!=null"> and s.status = #{status}</if>
+        </where>
+        order by s.create_time desc
+    </select>
+
+    <delete id="deleteBatch">
+        delete from setmeal where id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+    
+    <update id="update">
+        update setmeal
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="image != null">image = #{image},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateUser != null">update_user = #{updateUser},</if>
+        </set>
+        where id = #{id}
+    </update>
+</mapper>
