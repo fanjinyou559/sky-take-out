@@ -43,9 +43,16 @@ sky:
     admin-ttl: 720000000
     # 设置前端传递过来的令牌名称
     admin-token-name: token
+    user-secret-key: fjyedu
+    user-ttl: 7200000000
+    user-token-name: authentication
 
   alioss:
     endpoint: ${sky.alioss.endpoint}
     access-key-id: ${sky.alioss.access-key-id}
     access-key-secret: ${sky.alioss.access-key-secret}
     bucket-name: ${sky.alioss.bucket-nam}
+
+  wechat:
+    appid: wxf1471c26a0171e46
+    secret: 6d613180a3903dfee5a0304e1fb622d0
