@@ -19,7 +19,7 @@ import java.util.List;
  * 套餐相关接口
  */
 
-@RestController
+@RestController("adminSetmealController")
 @Api(tags = "套餐相关接口")
 @Slf4j
 @RequestMapping("/admin/setmeal")
