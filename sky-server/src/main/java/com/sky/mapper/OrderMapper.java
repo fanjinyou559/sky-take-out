@@ -68,4 +68,9 @@ public interface OrderMapper {
     Double sumByMap(Map data);
 
 
+    /**
+     * 根据动态条件统计订单数量
+     * @param map
+     */
+    Integer getOrderCount(Map map);
 }
