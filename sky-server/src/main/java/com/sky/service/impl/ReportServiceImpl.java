@@ -1,10 +1,13 @@
 package com.sky.service.impl;
 
+import com.sky.dto.GoodsSalesDTO;
 import com.sky.entity.Orders;
+import com.sky.mapper.OrderDetailMapper;
 import com.sky.mapper.OrderMapper;
 import com.sky.mapper.UserMapper;
 import com.sky.service.ReportService;
 import com.sky.vo.OrderReportVO;
+import com.sky.vo.SalesTop10ReportVO;
 import com.sky.vo.TurnoverReportVO;
 import com.sky.vo.UserReportVO;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -28,6 +32,8 @@ public class ReportServiceImpl implements ReportService {
     private OrderMapper orderMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private OrderDetailMapper orderDetailMapper;
 
     /**
      * 营业额统计
@@ -37,13 +43,8 @@ public class ReportServiceImpl implements ReportService {
      */
     @Override
     public TurnoverReportVO getTurnover(LocalDate beginTime, LocalDate endTime) {
-        //1.获取所有日期
-        List<LocalDate> dateList = new ArrayList<>();
-        dateList.add(beginTime);
-        while (!beginTime.equals(endTime)){
-            beginTime = beginTime.plusDays(1);
-            dateList.add(beginTime);
-        }
+        //获取日期列表
+        List<LocalDate> dateList = getDateList(beginTime, endTime);
 
         List<Double> turnoverList = new ArrayList<>();
         for (LocalDate date : dateList) {
@@ -72,12 +73,8 @@ public class ReportServiceImpl implements ReportService {
      */
     @Override
     public UserReportVO getUser(LocalDate begin, LocalDate end) {
-        List<LocalDate> dateList = new ArrayList<>();
-        dateList.add(begin);
-        while (!begin.equals(end)){
-            begin = begin.plusDays(1);
-            dateList.add(begin);
-        }
+        //获取日期列表
+        List<LocalDate> dateList = getDateList(begin, end);
 
         List<Integer> newUserList = new ArrayList<>();
         List<Integer> totalUserList = new ArrayList<>();
@@ -112,13 +109,8 @@ public class ReportServiceImpl implements ReportService {
      * @return
      */
     public OrderReportVO getOrderStatistics(LocalDate begin, LocalDate end){
-        List<LocalDate> dateList = new ArrayList<>();
-        dateList.add(begin);
-
-        while (!begin.equals(end)){
-            begin = begin.plusDays(1);
-            dateList.add(begin);
-        }
+        //获取日期列表
+        List<LocalDate> dateList = getDateList(begin, end);
         //每天订单总数集合
         List<Integer> orderCountList = new ArrayList<>();
         //每天有效订单数集合
@@ -158,6 +150,27 @@ public class ReportServiceImpl implements ReportService {
 
 
     /**
+     * 查询指定时间区间内的销量排名top10
+     * @param begin
+     * @param end
+     * @return
+     */
+    public SalesTop10ReportVO getSalesTop10(LocalDate begin, LocalDate end){
+        LocalDateTime beginTime = LocalDateTime.of(begin, LocalTime.MIN);
+        LocalDateTime endTime = LocalDateTime.of(end, LocalTime.MAX);
+        List<GoodsSalesDTO> goodsSalesDTOList = orderMapper.getSalesTop10(beginTime, endTime);
+
+        String nameList = StringUtils.join(goodsSalesDTOList.stream().map(GoodsSalesDTO::getName).collect(Collectors.toList()),",");
+        String numberList = StringUtils.join(goodsSalesDTOList.stream().map(GoodsSalesDTO::getNumber).collect(Collectors.toList()),",");
+
+        return SalesTop10ReportVO.builder()
+                .nameList(nameList)
+                .numberList(numberList)
+                .build();
+    }
+
+
+    /**
      * 根据时间区间统计指定状态的订单数量
      * @param beginTime
      * @param endTime
@@ -170,5 +183,22 @@ public class ReportServiceImpl implements ReportService {
         map.put("beginTime",beginTime);
         map.put("endTime", endTime);
         return orderMapper.getOrderCount(map);
+    }
+
+    /**
+     * 获取日期列表
+     * @param begin
+     * @param end
+     * @return
+     */
+    private List<LocalDate> getDateList(LocalDate begin , LocalDate end){
+        List<LocalDate> dateList = new ArrayList<>();
+        dateList.add(begin);
+
+        while (!begin.equals(end)){
+            begin = begin.plusDays(1);
+            dateList.add(begin);
+        }
+        return dateList;
     }
 }
