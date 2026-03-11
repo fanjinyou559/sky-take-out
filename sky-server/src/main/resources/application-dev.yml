@@ -9,8 +9,8 @@ sky:
 
   alioss:
     endpoint: oss-cn-shenzhen.aliyuncs.com
-    access-key-id: LTAI5tMaVaQvyBDPkPwE4Jvz
-    access-key-secret: GWMjfyirvUjKmhrs8T2yOXSOp2fore
+    access-key-id: 
+    access-key-secret: 
     bucket-name: sky-fjy-bucket
 
   redis:
@@ -20,8 +20,8 @@ sky:
     database: 10
 
   wechat:
-    appid: wxf1471c26a0171e46
-    secret: 6d613180a3903dfee5a0304e1fb622d0
+    appid: 
+    secret: 
     mchid : 1561414331
     mchSerialNo: 4B3B3DC35414AD50B1B755BAF8DE9CC7CF407606
     privateKeyFilePath: D:\apiclient_key.pem
